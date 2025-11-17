@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/localizacoes")
+@CrossOrigin(origins = "http://localhost:49202")
 @RequiredArgsConstructor
 public class LocalizacaoController {
 
