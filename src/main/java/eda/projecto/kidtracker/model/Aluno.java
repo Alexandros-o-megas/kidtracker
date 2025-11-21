@@ -20,4 +20,9 @@ public class Aluno {
     @ManyToOne
     @JoinColumn(name = "id_familia", referencedColumnName = "id")
     private Familia familia;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_ponto_paragem")
+private PontoParagem pontoParagem;
 }
+

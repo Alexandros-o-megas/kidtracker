@@ -19,4 +19,8 @@ public class Veiculo {
     @ManyToOne
     @JoinColumn(name = "id_motorista", referencedColumnName = "id")
     private Usuario motorista;
+
+    @OneToMany(mappedBy = "veiculo", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Rota> rotas;
 }

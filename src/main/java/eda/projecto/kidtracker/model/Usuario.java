@@ -25,5 +25,13 @@ public class Usuario {
     private String nome;
 
     @Column(nullable = false)
-    private String role; // Ex: "ROLE_ADMIN", "ROLE_MOTORISTA", "ROLE_ENCARREGADO"
+    private String role;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+      name = "usuario_roles",
+      joinColumns = @JoinColumn(name = "usuario_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 }
