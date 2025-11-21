@@ -111,4 +111,6 @@ public class VeiculoService {
         }
         veiculoRepository.deleteById(id);
     }
+
+    
 }
