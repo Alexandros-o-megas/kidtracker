@@ -1,0 +1,79 @@
+package eda.projecto.kidtracker.service;
+
+import eda.projecto.kidtracker.dto.AuthResponse;
+import eda.projecto.kidtracker.dto.LoginRequest;
+import eda.projecto.kidtracker.dto.RegisterRequest;
+import eda.projecto.kidtracker.model.Role;
+import eda.projecto.kidtracker.model.Usuario;
+import eda.projecto.kidtracker.repository.RoleRepository;
+import eda.projecto.kidtracker.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.Set;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final UsuarioRepository usuarioRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager; // Necessário para a lógica de login
+    private final JwtService jwtService; // Supondo que tenhas um serviço para JWT
+
+    /**
+     * Autentica um utilizador e gera um token JWT.
+     */
+    public AuthResponse login(LoginRequest request) {
+        // O AuthenticationManager trata da validação da senha e do utilizador
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+
+        // Se a autenticação passar, busca o utilizador para gerar o token
+        var user = usuarioRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Email ou senha inválidos."));
+        
+        String jwtToken = jwtService.generateToken(user); // `user` deve implementar `UserDetails`
+        return AuthResponse.builder().token(jwtToken).build();
+    }
+
+    /**
+     * Regista um novo utilizador com o perfil de ENCARREGADO.
+     */
+    @Transactional
+    public void registerUser(RegisterRequest request) {
+        if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalStateException("Erro: O email já está em uso!");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(request.getNome());
+        usuario.setEmail(request.getEmail());
+        usuario.setSenhaHash(passwordEncoder.encode(request.getSenha()));
+        
+        Role encarregadoRole = roleRepository.findByNome("ROLE_ENCARREGADO")
+                .orElseThrow(() -> new RuntimeException("Erro: Role 'ROLE_ENCARREGADO' não encontrada."));
+        
+        usuario.setRoles(Set.of(encarregadoRole));
+        usuarioRepository.save(usuario);
+    }
+
+    /**
+     * Obtém o perfil do utilizador atualmente autenticado.
+     */
+    public UserDetails getCurrentUserProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("Nenhum utilizador autenticado.");
+        }
+        return (UserDetails) authentication.getPrincipal();
+    }
+}
