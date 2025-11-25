@@ -1,7 +1,8 @@
-package com.example.carrinhas.controller;
+package eda.projecto.kidtracker.controller;
 
-import com.example.carrinhas.model.Veiculo; // Ou DTOs
-import com.example.carrinhas.service.VeiculoService;
+import eda.projecto.kidtracker.dto.VeiculoDTO;
+import eda.projecto.kidtracker.dto.VeiculoRequest;
+import eda.projecto.kidtracker.service.VeiculoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,18 +16,18 @@ public class VeiculoController {
     private final VeiculoService veiculoService;
 
     @GetMapping
-    public List<Veiculo> getAllVeiculos() {
+    public List<VeiculoDTO> getAllVeiculos() { // MUDANÇA: Deve retornar List<VeiculoDTO>
         return veiculoService.findAll();
     }
     
     @PostMapping
-    public Veiculo createVeiculo(@RequestBody Veiculo veiculo) {
-        return veiculoService.save(veiculo);
+    public VeiculoDTO createVeiculo(@RequestBody VeiculoRequest request) { // MUDANÇA: Recebe VeiculoRequest e retorna VeiculoDTO
+        return veiculoService.create(request); // MUDANÇA: Chama o método create que criámos no serviço
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Veiculo> updateVeiculo(@PathVariable Long id, @RequestBody Veiculo veiculoDetails) {
-        Veiculo updatedVeiculo = veiculoService.update(id, veiculoDetails);
+    public ResponseEntity<VeiculoDTO> updateVeiculo(@PathVariable Long id, @RequestBody VeiculoRequest request) { // MUDANÇA: Recebe VeiculoRequest
+        VeiculoDTO updatedVeiculo = veiculoService.update(id, request);
         return ResponseEntity.ok(updatedVeiculo);
     }
 

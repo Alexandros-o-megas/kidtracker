@@ -1,8 +1,7 @@
-// Ficheiro: src/main/java/com/example/carrinhas/controller/DashboardController.java
-package com.example.carrinhas.controller;
+package eda.projecto.kidtracker.controller;
 
-import com.example.carrinhas.dto.DashboardStatsDTO;
-import com.example.carrinhas.service.DashboardService;
+import eda.projecto.kidtracker.dto.DashboardStatsDTO;
+import eda.projecto.kidtracker.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
