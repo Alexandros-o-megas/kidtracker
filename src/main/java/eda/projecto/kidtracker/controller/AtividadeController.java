@@ -1,6 +1,7 @@
 package eda.projecto.kidtracker.controller;
 
 
+import eda.projecto.kidtracker.dto.AtividadeDTO;
 import eda.projecto.kidtracker.model.Atividade;
 import eda.projecto.kidtracker.service.AtividadeService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class AtividadeController {
     private final AtividadeService atividadeService;
     
     @GetMapping("/recent")
-    public List<Atividade> getRecentActivities() {
+    public List<AtividadeDTO> getRecentActivities() {
         return atividadeService.listarRecentes();
     }
 }

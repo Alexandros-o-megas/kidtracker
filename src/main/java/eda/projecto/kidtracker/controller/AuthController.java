@@ -3,6 +3,7 @@ package eda.projecto.kidtracker.controller;
 import eda.projecto.kidtracker.dto.AuthResponse; // Terás que criar este
 import eda.projecto.kidtracker.dto.LoginRequest; // E este
 import eda.projecto.kidtracker.dto.RegisterRequest;
+import eda.projecto.kidtracker.model.Usuario;
 import eda.projecto.kidtracker.service.AuthService; // E este serviço
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,8 @@ public class AuthController {
     // O teu AuthContext também faz uma chamada getProfile()
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile() {
-        // Esta lógica retornará os dados do usuário atualmente autenticado
-        // O Spring Security torna isto fácil de obter
-        return ResponseEntity.ok(authService.getCurrentUserProfile());
+        Usuario userProfile = authService.getCurrentUserProfile();
+        return ResponseEntity.ok(userProfile);
     }
 
     @PostMapping("/register")

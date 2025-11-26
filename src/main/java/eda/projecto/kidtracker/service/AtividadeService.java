@@ -1,5 +1,6 @@
 package eda.projecto.kidtracker.service;
 
+import eda.projecto.kidtracker.dto.AtividadeDTO;
 import eda.projecto.kidtracker.model.Atividade;
 import eda.projecto.kidtracker.model.Usuario;
 import eda.projecto.kidtracker.model.Veiculo;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +35,11 @@ public class AtividadeService {
         
         atividadeRepository.save(novaAtividade);
     }
-    
-    /**
-     * Obtém as 5 atividades mais recentes do sistema.
-     * @return Uma lista de entidades Atividade.
-     */
-    @Transactional(readOnly = true)
-    public List<Atividade> listarRecentes() {
-        return atividadeRepository.findTop5ByOrderByTimestampDesc();
+
+    public List<AtividadeDTO> listarRecentes() {
+        return atividadeRepository.findTop5ByOrderByTimestampDesc().stream()
+                .map(AtividadeDTO::fromEntity) // Converte cada Atividade para AtividadeDTO
+                .collect(Collectors.toList());
     }
+
 }

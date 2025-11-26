@@ -1,5 +1,6 @@
 package eda.projecto.kidtracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class RotaPontoParagem {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("rotaId") // Mapeia o 'rotaId' da nossa chave composta para esta relação
     @JoinColumn(name = "rota_id")
+    @JsonBackReference
     private Rota rota;
 
     // Relação com PontoParagem

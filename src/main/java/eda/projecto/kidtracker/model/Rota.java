@@ -1,5 +1,6 @@
 package eda.projecto.kidtracker.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -24,13 +25,13 @@ public class Rota {
     @ToString.Exclude
     private Veiculo veiculo;
 
-    // Relação: Uma rota contém uma lista ordenada de paragens.
-    // Usamos uma entidade de junção (RotaPontoParagem) para guardar a ordem (sequência).
     @OneToMany(
-        mappedBy = "rota",
-        cascade = CascadeType.ALL, // Se apagarmos uma rota, as suas associações de paragem também são apagadas.
-        orphanRemoval = true
+            mappedBy = "rota",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER // <<< ADICIONE/ALTERE ISTO
     )
-    @OrderBy("sequencia ASC") // Garante que a lista de paragens vem sempre na ordem correta!
+    @OrderBy("sequencia ASC")
+    @JsonManagedReference
     private List<RotaPontoParagem> paragens;
 }

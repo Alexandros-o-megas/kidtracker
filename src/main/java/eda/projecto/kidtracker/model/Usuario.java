@@ -2,16 +2,7 @@ package eda.projecto.kidtracker.model;
 
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import java.util.Collection;
 
@@ -33,6 +24,10 @@ public class Usuario implements UserDetails {
     private String senhaHash;
 
     private String nome;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_familia")
+    private Familia familia;
     
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -70,4 +65,5 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
